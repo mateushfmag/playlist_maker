@@ -6,3 +6,10 @@ exports.responses = {
         return { message, ...others }
     }
 }
+
+Error = class extends Error{
+    constructor(message,status = 500){
+        super(message)
+        this.status = status
+    }
+}

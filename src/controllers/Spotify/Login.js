@@ -1,23 +1,28 @@
-const { Spotify } = require("../../services")
-const database = require('../../database')
 const { responses } = require('../../utils')
+const Login = require('../../vendors/Spotify/Login')
 
 exports.login = async (req, res) => {
-    await Spotify.get("https://accounts.spotify.com/authorize", {
-        params: {
-            client_id: process.env.SPOTIFY_CLIENT_ID,
-            response_type: 'code',
-            redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
-            state: '34fFs29kd09'    //spotify recommended state
-        }
-    })
-    return res.json(responses.success({}))
+    try{
+        const resp = await Login.login()
+        return res.json(responses.success({
+            data: resp
+        }))
+    }catch(err){
+        return res.status(err.status).json(
+            responses.error(err.message)
+        )
+    }
 }
 
 exports.authorized = async (req, res) => {
-    const { code } = req.params
-    if (code) await database.insert(code)
-    return res.json(
-        responses.success({})
-    )
+    try{
+        const resp = await Login.authorize()
+        return res.json(responses.success({
+            data: resp
+        }))
+    }catch(err){
+        return res.status(err.status).json(
+            responses.error(err.message)
+        )
+    }
 }
