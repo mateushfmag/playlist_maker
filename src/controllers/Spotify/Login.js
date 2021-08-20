@@ -14,9 +14,9 @@ exports.login = async (req, res) => {
     }
 }
 
-exports.authorized = async (req, res) => {
+exports.authorize = async (req, res) => {
     try{
-        const resp = await Login.authorize()
+        const resp = await Login.authorize(req.params.code)
         return res.json(responses.success({
             data: resp
         }))
