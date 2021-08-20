@@ -4,9 +4,7 @@ const Login = require('../../vendors/Spotify/Login')
 exports.login = async (req, res) => {
     try{
         const resp = await Login.login()
-        return res.json(responses.success({
-            data: resp
-        }))
+        return res.json(responses.success({}))
     }catch(err){
         return res.status(err.status).json(
             responses.error(err.message)

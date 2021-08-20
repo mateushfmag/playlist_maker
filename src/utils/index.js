@@ -7,7 +7,7 @@ exports.responses = {
     }
 }
 
-Error = class extends Error{
+global.Error = class extends Error{
     constructor(message,status = 500){
         super(message)
         this.status = status

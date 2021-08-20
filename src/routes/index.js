@@ -8,8 +8,7 @@ const controllers = {
 }
 
 routes.get("/ping", (req,res) => res.send("pong"))
-routes.get("/getPlaylists", (req,res) => controllers.spotify.playlists.get)
-routes.get("/login", (req,res) => controllers.spotify.login.login)
-routes.get("/authorize", (req,res) => controllers.spotify.login.authorized)
+routes.get("/login", controllers.spotify.login.login)
+routes.get("/authorize", controllers.spotify.login.authorize)
 
 module.exports = routes
