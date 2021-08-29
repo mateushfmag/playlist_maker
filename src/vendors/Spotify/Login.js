@@ -2,15 +2,14 @@ const { Spotify } = require("../../services")
 const database = require('../../database')
 
 exports.login = async () => {
-    const spotifyResponse = await Spotify.get("https://accounts.spotify.com/authorize", {
-        params: {
-            client_id: process.env.SPOTIFY_CLIENT_ID,
-            response_type: 'code',
-            redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
-            state: '34fFs29kd09'    //spotify recommended state
-        }
-    })
-    return spotifyResponse
+    const state = '34fFs29kd09'    //spotify recommended state
+    const redirectUrl = `https://accounts.spotify.com/authorize?
+        response_type=code&
+        client_id=${process.env.SPOTIFY_CLIENT_ID}&
+        redirect_uri=${process.env.SPOTIFY_REDIRECT_URI}&
+        state=${state}
+    `.replace(/\n| /gm,'')
+    return redirectUrl
 }
 
 exports.authorize = async (code) => {

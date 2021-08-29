@@ -5,7 +5,7 @@ exports.login = async (req, res) => {
     try{
         const resp = await Login.login()
         // return res.json(responses.success(resp.data))
-        return res.send(resp.data)
+        return res.redirect(resp)
     }catch(err){
         return res.status(err.status || 500).json(
             responses.error(err.message)
@@ -15,10 +15,8 @@ exports.login = async (req, res) => {
 
 exports.authorize = async (req, res) => {
     try{
-        const resp = await Login.authorize(req.params.code)
-        return res.json(responses.success({
-            data: resp
-        }))
+        const resp = await Login.authorize(req.query.code)
+        return res.json(responses.success(resp))
     }catch(err){
         return res.status(err.status).json(
             responses.error(err.message)
