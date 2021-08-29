@@ -13,5 +13,6 @@ routes.get("/", (req,res) => res.send("pong"))
 routes.get("/login", controllers.spotify.login.login)
 routes.get("/authorize", controllers.spotify.login.authorize)
 routes.get("/user", controllers.spotify.user.get)
+routes.get("/playlists", controllers.spotify.playlists.get)
 
 module.exports = routes
