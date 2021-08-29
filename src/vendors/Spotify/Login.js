@@ -1,69 +1,55 @@
-const { Spotify, spotifyBaseUrl } = require("../../services")
-const database = require('../../database')
-const axios = require("axios")
+const playlists = require("./Playlists.js")
+const url = require('url');
+const axios = require("axios");
+const utils = require('../../utils');
 
 exports.login = async () => {
     const state = '34fFs29kd09'    //spotify recommended state
-    const scopes = ['playlist-read-private']
-    const redirectUrl = `https://accounts.spotify.com/authorize?
-        response_type=code&
-        client_id=${process.env.SPOTIFY_CLIENT_ID}&
-        scope=${scopes.join("%20")}&
-        redirect_uri=${process.env.SPOTIFY_REDIRECT_URI}&
-        state=${state}
-    `.replace(/\n| /gm, '')
+    const scopes = ['user-read-private']
+    const redirectUrl = `https://accounts.spotify.com/authorize?` +
+        new url.URLSearchParams({
+            response_type: "code",
+            client_id: process.env.SPOTIFY_CLIENT_ID,
+            scope: scopes.join(" "),
+            redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
+            state
+        })
     return redirectUrl
 }
 
-exports.authorize = async (code) => {
+exports.authorize = async code => {
     try {
-        if (code) {
-            console.log(code, "ANTES DO TOKEN RESPONSE")
-            const clientId = process.env.SPOTIFY_CLIENT_ID
-            const clientSecret = process.env.SPOTIFY_CLIENT_SECRET
-            const tokenResult = await axios.post(`https://accounts.spotify.com/api/token`, {
-                code,
-                redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
-                grant_type: 'authorization_code'
-            }, {
-                headers: {
-                    'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
-                }
-            })
+        const params = new url.URLSearchParams({
+            code: code,
+            redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
+            grant_type: 'authorization_code'
+        });
+        const tokenResult = await axios.post(`https://accounts.spotify.com/api/token`, params.toString(), {
+            headers: {
+                ...utils.spotify.basicAuthorizationHeader
+            }
+        })
+        const { access_token } = tokenResult.data
 
-            const { access_token } = tokenResult.data
-
-            const page = `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Document</title>
-        </head>
-        <body>
-            <button id="list">Listar Playlists</button>
-            <input id="token" value="${access_token}">
-        </body>
-        <script type="text/javascript">
-            var btnList = document.getElementById("list")
-            btnList.addEventListener("click",async ev => {
-                try{
-                    const base = ${spotifyBaseUrl}
-                    const resp = await fetch(\`\${base}/me\`).then(resp => resp.json())
-                    console.log(resp)
-                }catch(err){
-                    console.log("DEU ERRO", err.message)
-                    console.error(err)
-                }
-            })
-        </script>
-        </html>`
-
-            return page
-        }
-        return { success: 0 }
+        const playlistsList = await playlists.get(access_token)
+        return playlistsList
     } catch (err) {
+        console.log(err.response?.status, err.response?.data)
         return err.response?.data || err.message
     }
+}
+
+
+exports.refreshToken = async refreshToken => {
+    const params = new url.URLSearchParams({
+        refresh_token: refreshToken,
+        grant_type: 'refresh_token'
+    });
+    const tokenResult = await axios.post(`https://accounts.spotify.com/api/token`, params.toString(), {
+        headers: {
+            'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
+        }
+    })
+    const { access_token } = tokenResult.data
+    return access_token
 }
