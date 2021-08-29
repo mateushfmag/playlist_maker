@@ -1,4 +1,3 @@
-const user = require("./User.js")
 const url = require('url');
 const axios = require("axios");
 const utils = require('../../utils');
@@ -30,9 +29,7 @@ exports.authorize = async code => {
             }
         })
         const { access_token } = tokenResult.data
-
-        const userData = await user.get(access_token)
-        return userData
+        return access_token
     } catch (err) {
         throw new Error(err.response?.data || err.message, err.response?.status)
     }
