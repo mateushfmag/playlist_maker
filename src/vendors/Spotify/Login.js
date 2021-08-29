@@ -1,4 +1,4 @@
-const playlists = require("./Playlists.js")
+const user = require("./User.js")
 const url = require('url');
 const axios = require("axios");
 const utils = require('../../utils');
@@ -31,10 +31,10 @@ exports.authorize = async code => {
         })
         const { access_token } = tokenResult.data
 
-        const playlistsList = await playlists.get(access_token)
-        return playlistsList
+        const userData = await user.get(access_token)
+        return userData
     } catch (err) {
-        return err.response?.data || err.message
+        throw new Error(err.response?.data || err.message, err.response?.status)
     }
 }
 
