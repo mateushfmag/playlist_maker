@@ -1,0 +1,12 @@
+@url=https://accounts.spotify.com
+@token=AQCU9eMqYJ1WwdN_g73ed6HkRxTLt_RpLxa0E04-BrGhrsRAF7LtqXxa99VurZ3AmabBI6AYuXssXiYqYqrhyU5dQqRkoPekyINqftX0gqkx2oarDipUzym_P5QBuAFtKeX30FPlPl397CFRHBysj-V_4IKFoX3H9x4CftczwNpPx5dWIESlk4YSi7TnoCR0HeKw2nKxaaOnH75UKMQoMLggoT-SMnDZFhD0hSo8Pe5E
+
+POST {{url}}/api/token
+Content-Type: application/json
+Authorization: Basic NTExODJlMjhjZjQxNDZmN2E0YjMxMzQxMDM1ODk1ZTM6ZjYyNzZjMWVmNzc4NGRkYmFlZTkyYmFjYTY4NTQxYTM=
+
+{
+    "code": "AQCU9eMqYJ1WwdN_g73ed6HkRxTLt_RpLxa0E04-BrGhrsRAF7LtqXxa99VurZ3AmabBI6AYuXssXiYqYqrhyU5dQqRkoPekyINqftX0gqkx2oarDipUzym_P5QBuAFtKeX30FPlPl397CFRHBysj-V_4IKFoX3H9x4CftczwNpPx5dWIESlk4YSi7TnoCR0HeKw2nKxaaOnH75UKMQoMLggoT-SMnDZFhD0hSo8Pe5E",
+    "redirect_uri": "https://playlist-maker-service.herokuapp.com/authorize",
+    "grant_type": "authorization_code"
+}

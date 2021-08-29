@@ -16,7 +16,7 @@ exports.login = async (req, res) => {
 exports.authorize = async (req, res) => {
     try{
         const resp = await Login.authorize(req.query.code)
-        return res.json(responses.success(resp))
+        return res.send(resp)
     }catch(err){
         return res.status(err.status).json(
             responses.error(err.message)
