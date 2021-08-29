@@ -34,7 +34,6 @@ exports.authorize = async code => {
         const playlistsList = await playlists.get(access_token)
         return playlistsList
     } catch (err) {
-        console.log(err.response?.status, err.response?.data)
         return err.response?.data || err.message
     }
 }
@@ -47,7 +46,7 @@ exports.refreshToken = async refreshToken => {
     });
     const tokenResult = await axios.post(`https://accounts.spotify.com/api/token`, params.toString(), {
         headers: {
-            'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
+            ...utils.spotify.basicAuthorizationHeader
         }
     })
     const { access_token } = tokenResult.data
