@@ -6,7 +6,9 @@ exports.get = async (req,res) => {
         const accessToken = req.cookies["accessToken"]
         const {page, size} = req.query
         const resp = await Playlists.get(accessToken, {page, size})
-        return res.json(resp)
+        return res.json(
+            responses.success(resp)
+        )
     }catch(err){
         return res.status(err.status || 500).json(
             responses.error(err.message)

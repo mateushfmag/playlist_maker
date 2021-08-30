@@ -2,10 +2,15 @@ const { Spotify } = require("../../services")
 const utils = require("../../utils")
 
 exports.get = async accessToken => {
-    const user = await Spotify.get(`/me`, {
-        headers: {
-            ...utils.spotify.getAuthorizationHeader(accessToken)
-        }
-    })
-    return user.data
+    try{
+        const user = await Spotify.get(`/me`, {
+            headers: {
+                ...utils.spotify.getAuthorizationHeader(accessToken)
+            }
+        })
+        return user.data
+    }catch(err){
+        const message = err.response?.data || err.message || err
+        throw new utils.Exception(message, err.response?.status)
+    }
 }

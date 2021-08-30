@@ -21,7 +21,7 @@ exports.spotify = {
     })
 }
 
-global.Error = class extends Error{
+exports.Exception = class extends Error{
     constructor(message,status = 500){
         super(message)
         this.status = status
