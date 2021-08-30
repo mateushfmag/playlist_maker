@@ -5,7 +5,7 @@ const utils = require('../../utils');
 exports.login = async () => {
     try{
         const state = '34fFs29kd09'    //spotify recommended state
-        const scopes = ['user-read-private']
+        const scopes = ['user-read-private', 'playlist-modify-public']
         const redirectUrl = `https://accounts.spotify.com/authorize?` +
             new url.URLSearchParams({
                 response_type: "code",
@@ -35,7 +35,7 @@ exports.authorize = async code => {
         const { access_token } = tokenResult.data
         return access_token
     } catch (err) {
-        const message = err.response?.data || err.message || err
+        const message = utils.getAxiosMessage(err)
         throw new utils.Exception(message, err.response?.status)
     }
 }
@@ -55,7 +55,7 @@ exports.refreshToken = async refreshToken => {
         const { access_token } = tokenResult.data
         return access_token
     }catch(err){
-        const message = err.response?.data || err.message || err
+        const message = utils.getAxiosMessage(err)
         throw new utils.Exception(message, err.response?.status)
     }
 }

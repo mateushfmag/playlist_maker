@@ -27,3 +27,7 @@ exports.Exception = class extends Error{
         this.status = status
     }
 }
+
+exports.getAxiosMessage = err => {
+    return err.response?.data?.error?.message || err.response?.data || err.message || err
+}
